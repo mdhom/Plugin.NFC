@@ -183,6 +183,9 @@ namespace Plugin.NFC
 			OnMessageReceived?.Invoke(tagInfo);
 		}
 
+		public void StartReaderMode() => throw new NotImplementedException();
+		public void StopReaderMode() => throw new NotImplementedException();
+
 		#endregion
 	}
 }

@@ -6,16 +6,18 @@ using Android.Nfc.Tech;
 using Java.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Android.Nfc.NfcAdapter;
 
 namespace Plugin.NFC
 {
 	/// <summary>
 	/// Android implementation of <see cref="INFC"/>
 	/// </summary>
-	public class NFCImplementation : INFC
+	public class NFCImplementation : Java.Lang.Object, INFC, IReaderCallback
 	{
 		public event EventHandler OnTagConnected;
 		public event EventHandler OnTagDisconnected;
@@ -124,6 +126,37 @@ namespace Plugin.NFC
 			_isListening = false;
 			OnTagListeningStatusChanged?.Invoke(_isListening);
 		}
+
+		public void StartReaderMode()
+		{
+			Debug.WriteLine($"NFC.android: StartReaderMode");
+			var flags = NfcReaderFlags.NoPlatformSounds | NfcReaderFlags.NfcA;
+			Debug.WriteLine($"NfcReaderFlags: {(int)flags}");
+			_nfcAdapter.EnableReaderMode(
+				CurrentActivity,
+				this,
+				flags,
+				null);
+		}
+
+		public void StopReaderMode()
+		{
+			Debug.WriteLine($"NFC.android: StopReaderMode");
+			_nfcAdapter.DisableReaderMode(CurrentActivity);
+		}
+
+		void IReaderCallback.OnTagDiscovered(Tag tag)
+		{
+			Debug.WriteLine($"IReaderCallback.OnTagDiscovered, {tag?.GetType().Name ?? "null"}, tech={string.Join(",", tag?.GetTechList())}");
+			_currentTag = tag;
+			if (_currentTag != null)
+			{
+				var nTag = GetTagInfo(_currentTag);
+				Debug.WriteLine($"IReaderCallback.OnTagDiscovered, {nTag?.Records?.Length ?? 0} Records");
+				OnMessageReceived?.Invoke(nTag);
+			}
+		}
+
 
 		/// <summary>
 		/// Starts tag publishing (writing or formatting)

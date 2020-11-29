@@ -564,6 +564,9 @@ namespace Plugin.NFC
 			});
 		}
 
+		public void StartReaderMode() => throw new NotImplementedException();
+		public void StopReaderMode() => throw new NotImplementedException();
+
 		#endregion
 	}
 
@@ -743,6 +746,9 @@ namespace Plugin.NFC
 			}
 			return results;
 		}
+
+		public void StartReaderMode() => throw new NotImplementedException();
+		public void StopReaderMode() => throw new NotImplementedException();
 
 		#endregion
 	}

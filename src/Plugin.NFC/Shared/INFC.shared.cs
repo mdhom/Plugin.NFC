@@ -52,6 +52,17 @@ namespace Plugin.NFC
 		void StopListening();
 
 		/// <summary>
+		/// Starts read only mode
+		/// </summary>
+		void StartReaderMode();
+
+
+		/// <summary>
+		/// Stops read only mode
+		/// </summary>
+		void StopReaderMode();
+
+		/// <summary>
 		/// Starts tag publishing (writing or formatting)
 		/// </summary>
 		/// <param name="clearMessage">Format tag</param>
